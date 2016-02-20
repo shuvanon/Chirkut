@@ -1,5 +1,6 @@
 from flask import (Flask, g,render_template, flash, redirect, url_for)
-from flask.ext.login import LoginManager
+from flask.ext.bcrypt import check_password_hash
+from flask.ext.login import LoginManager, login_user
 
 import forms
 import models
