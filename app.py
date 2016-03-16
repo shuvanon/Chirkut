@@ -71,12 +71,12 @@ def login():
     return    render_template('login.html', form=form)
         
  
- @app.route('/logout')
- @login.required
- def logout():
-    logout_user()
-    flash ("You've been logged out! Come back soon!", "success")
-    return redirect(url_for(' index'))
+## @app.route('/logout')
+## @login.required
+## def logout():
+##    logout_user()
+##    flash ("You've been logged out! Come back soon!", "success")
+##    return redirect(url_for(' index'))
  
         
 @app.route('/index')
