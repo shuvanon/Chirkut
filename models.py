@@ -31,7 +31,7 @@ class User(UserMixin, Model):
         try:
             with DATABASE.transaction():
                 cls.create(
-                    user_name=user_name,
+                    username=user_name,
                     email=email,
                     password=generate_password_hash(password),
                     is_admin=admin)

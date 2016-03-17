@@ -73,7 +73,7 @@ def login():
         
  
 @app.route('/logout')
-@login.required
+@login_required
 def logout():
    logout_user()
    flash ("You've been logged out! Come back soon!", "success")
@@ -81,7 +81,7 @@ def logout():
  
  
 @app.route('/new_post', methods=['GET', 'POST'])
-#@login_required
+@login_required
 def post():
     form = forms.PostForm()
     if form.validate_on_submit():
@@ -98,7 +98,7 @@ def index():
 
 @app.route('/stream')
 @app.route('/stream/<username>')
-def stream(username=none):
+def stream(username=None):
     template = 'stream.html'
     if username and username != current_user.username:
         user = models.User.select().where(models.User.username**username).get() # the ** is the "like" operator (non-case sensitive comparison)
@@ -122,5 +122,4 @@ if __name__ == '__main__':
         )
     except ValueError:
         pass
-    
     app.run(debug=DEBUG, host=HOST,port=PORT)
