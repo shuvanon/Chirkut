@@ -23,7 +23,28 @@ class User(UserMixin, Model):
     def get_stream(self):
         
         return Post.select().where(
+            (Post.user << self.following() ) |
             (Post.user == self)
+        )
+        
+    def following(self):
+        """I following"""
+        return(
+            User.select().join(
+                Relationship, on=Relationship.to_user
+            ).where(
+                Relationship.from_user== self
+            )
+        )
+        
+    def followers(self):
+        """Who follow Me"""
+        return(
+            User.select().join(
+                Relationship, on=Relationship.from_user
+            ).where(
+                Relationship.to_user== self
+            )
         )
 
     @classmethod 
@@ -51,7 +72,18 @@ class Post(Model):
         database = DATABASE
         order_by = ('-timestamp',)
 
+class Relationship(Model):
+    from_user = ForeignKeyField(User, related_name='relationships')
+    to_user = ForeignKeyField(User, related_name='related_to')
+    
+    class Meta:
+        database=DATABASE
+        indexes = (
+            (('from_user', 'to_user'), True)
+        )
+
+
 def initialize():
     DATABASE.connect()
-    DATABASE.create_tables([User, Post],safe=True)
+    DATABASE.create_tables([User, Post, Relationship],safe=True)
     DATABASE.close()

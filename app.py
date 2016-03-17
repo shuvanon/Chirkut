@@ -1,4 +1,4 @@
-from flask import (Flask, g,render_template, flash, redirect, url_for)
+from flask import (Flask, g,render_template, flash, redirect, url_for, abort)
 from flask.ext.bcrypt import check_password_hash
 from flask.ext.login import LoginManager, login_user,logout_user,login_required,current_user
 
@@ -77,7 +77,7 @@ def login():
 def logout():
    logout_user()
    flash ("You've been logged out! Come back soon!", "success")
-   return redirect(url_for(' index'))
+   return redirect(url_for('index'))
  
  
 @app.route('/new_post', methods=['GET', 'POST'])
@@ -109,6 +109,53 @@ def stream(username=None):
     if username:
         template = 'user_stream.html'
     return render_template(template, stream=stream, user=user)
+
+
+@app.route('/post/<int:post_id>')
+def view_post(post_id):
+    posts=models.Post.select().where(models.Post.id == post_id)
+    return render_template('stream.html', stream=posts)
+
+
+@app.route('/follow/<username>')
+@login_required
+def follow(username):
+    try:
+        to_user=models.User.get(models.User.username**username)
+    except models.DoesNotExist:
+        pass
+    else:
+        try:
+            models.Relationship.create(
+                from_user=g.user._get_current_object(),
+                to_user=to_user
+            )
+        except models.IntegrityError:
+            pass
+        else:
+            flash("You are now following {}!".format(to_user.username), "success")
+    return redirect(url_for('stream', username=to_user.username))
+
+
+@app.route('/unfollow/<username>')
+@login_required
+def unfollow(username):
+    try:
+        to_user=models.User.get(models.User.username**username)
+    except models.DoesNotExist:
+        pass
+    else:
+        try:
+            models.Relationship.get(
+                from_user=g.user._get_current_object(),
+                to_user=to_user
+            ).delete.instance()
+        except models.IntegrityError:
+            pass
+        else:
+            flash("Tou have unfollowed {}!".format(to_user.username), "success")
+    return redirect(url_for('stream', username=to_user.username))
+
 
 
 if __name__ == '__main__':
