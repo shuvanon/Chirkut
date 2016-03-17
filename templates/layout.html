@@ -68,6 +68,7 @@
               <a href="{{ url_for('index') }}">All</a>
 
               {% if current_user.is_authenticated %}
+              <a href="{{ url_for('stream', username=current_user.username) }}"> Following</a>
               <a href="{{ url_for('post') }}" class="new">Create New Post</a>
               {% endif %}
 
@@ -83,7 +84,7 @@
 
           <div class="row">
 
-            <p>A Social App built with Flask<br>by <a href="http://teamtreehouse.com">Treehouse</a></p>
+            <p>A Social App built by<br> <a href="www.facebook.com/shuvanon.razik">Shuvanon Razik</a></p>
 
           </div>
 
