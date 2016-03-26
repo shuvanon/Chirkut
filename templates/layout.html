@@ -69,7 +69,10 @@
 
               {% if current_user.is_authenticated %}
               <a href="{{ url_for('stream', username=current_user.username) }}"> Following</a>
+              <a href="{{url_for('allfile')}}">All Files</a>
+              <a href="{{url_for('filestream', username=current_user.username)}}">My Files</a>
               <a href="{{ url_for('post') }}" class="new">Create New Post</a>
+              <a href="{{ url_for('upload_file') }}" class="new">Upload file</a>
               {% endif %}
 
             </nav>
@@ -84,7 +87,7 @@
 
           <div class="row">
 
-            <p>A Social App built by<br> <a href="www.facebook.com/shuvanon.razik">Shuvanon Razik</a></p>
+            <p>A Social App built by<br>Shuvanon Razik</a></p>
 
           </div>
 

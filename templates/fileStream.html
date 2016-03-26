@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block content %}
+{% for file in filestream %}
+  <article>
+    <h2>
+      <a href="{{ url_for('filestream', username=file.user.username) }}">
+        {{ file.user.username }}
+      </a>
+    </h2>
+    <i class="clock"></i>
+    <time data-time="{{ file.timestamp }}" }}">
+      {{ file.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}
+    </time>
+   <!-- <a href="{{ url_for('view_file', file_id=file.id) }}" class="view">View</a>-->
+    <div class="file">
+        <a href="{{ file.path}}" target="_blank"</a>
+       <img src="{{ file.path }}" alt="" style="width:521px;height:512px;"> 
+    </div>
+  </article>
+{% endfor %}
+{% endblock %}

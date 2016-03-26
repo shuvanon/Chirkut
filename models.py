@@ -27,6 +27,18 @@ class User(UserMixin, Model):
             (Post.user == self)
         )
         
+    def get_files(self):
+        return File.select().where (
+            (File.user == self)
+        )
+        
+    def get_filestream(self):
+        
+        return File.select().where(
+            (File.user << self.following() ) |
+            (File.user == self)
+        )
+        
     def following(self):
         """I following"""
         return(
@@ -83,7 +95,31 @@ class Relationship(Model):
         )
 
 
+class File(Model):
+    timestamp = DateTimeField(default=datetime.datetime.now)
+    
+    user = ForeignKeyField(
+        rel_model=User, 
+        related_name='files'
+    )
+    path = CharField()
+
+    class Meta:
+        database = DATABASE
+        order_by = ('-timestamp',)
+
+#class Relationship(Model):
+ #   from_user = ForeignKeyField(User, related_name='relationships')
+  #  to_user = ForeignKeyField(User, related_name='related_to')
+    
+   # class Meta:
+    #    database=DATABASE
+     #   indexes = (
+      #      (('from_user', 'to_user'), True)
+       # )
+
+
 def initialize():
     DATABASE.connect()
-    DATABASE.create_tables([User, Post, Relationship],safe=True)
+    DATABASE.create_tables([User, Post, Relationship, File],safe=True)
     DATABASE.close()
